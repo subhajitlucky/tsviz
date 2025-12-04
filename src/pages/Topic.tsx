@@ -2,8 +2,9 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { concepts } from "@/data/concepts";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Play, RefreshCw } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, Play, BookOpen, Code2, Lightbulb } from "lucide-react";
 
 export function Topic() {
     const { topicId } = useParams();
@@ -21,81 +22,167 @@ export function Topic() {
     }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-3.5rem)] overflow-hidden">
-            {/* Header */}
-            <header className="border-b bg-muted/40 p-4">
-                <div className="container flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+            {/* Hero Section */}
+            <div className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+                <div className="container py-4">
+                    <div className="flex items-center justify-between mb-3">
                         <Link to="/concepts">
-                            <Button variant="ghost" size="icon">
-                                <ArrowLeft className="h-4 w-4" />
+                            <Button variant="ghost" size="sm" className="gap-2 h-8">
+                                <ArrowLeft className="h-3.5 w-3.5" />
+                                Back
                             </Button>
                         </Link>
-                        <div>
-                            <h1 className="text-lg font-bold">{concept.title}</h1>
-                            <p className="text-xs text-muted-foreground">{concept.phase}</p>
-                        </div>
+                        <Badge variant="outline" className="text-xs">
+                            {concept.phase}
+                        </Badge>
                     </div>
-                    <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
-                            <RefreshCw className="mr-2 h-4 w-4" /> Reset
-                        </Button>
-                        <Button size="sm">
-                            <Play className="mr-2 h-4 w-4" /> Run
-                        </Button>
+                    <div className="max-w-4xl">
+                        <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
+                            {concept.title}
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            {concept.description}
+                        </p>
                     </div>
                 </div>
-            </header>
+            </div>
 
-            {/* Main Split View */}
-            <div className="flex-1 flex overflow-hidden">
-                {/* Left Panel: Theory & Code */}
-                <div className="w-1/2 border-r p-6 overflow-y-auto bg-background">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="prose dark:prose-invert max-w-none"
+            {/* Main Content */}
+            <div className="container py-8 max-w-4xl">
+                <div className="space-y-8">
+
+                    {/* Definition Section */}
+                    <motion.section
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
                     >
-                        <h2>Understanding {concept.title}</h2>
-                        <p>{concept.description}</p>
-
-                        <div className="my-8 p-4 bg-muted rounded-lg border-l-4 border-primary">
-                            <h3 className="text-sm font-bold uppercase tracking-wide text-muted-foreground mb-2">Key Takeaway</h3>
-                            <p className="m-0 font-medium">
-                                This is where the core mental model explanation will go. It will be specific to {concept.title}.
-                            </p>
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <BookOpen className="h-4 w-4 text-primary" />
+                            </div>
+                            <h2 className="text-xl font-semibold">What is it?</h2>
                         </div>
-
-                        <h3>Example Code</h3>
-                        <pre className="bg-muted p-4 rounded-md overflow-x-auto">
-                            <code>{`// Example code for ${concept.title}
-const example = "Hello World";
-console.log(example);`}</code>
-                        </pre>
-                    </motion.div>
-                </div>
-
-                {/* Right Panel: Visualization Stage */}
-                <div className="w-1/2 bg-muted/10 p-6 flex flex-col relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-20 dark:opacity-5" />
-
-                    <div className="relative z-10 flex-1 flex items-center justify-center">
-                        <Card className="w-full max-w-md p-8 text-center border-dashed border-2 bg-background/50 backdrop-blur">
-                            <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Play className="h-8 w-8 text-primary" />
-                                </div>
-                                <h3 className="text-xl font-bold mb-2">Visualization Stage</h3>
-                                <p className="text-muted-foreground">
-                                    This area will render the interactive memory graph and execution flow for <strong>{concept.title}</strong>.
+                        <Card className="border-l-4 border-l-primary">
+                            <CardContent className="p-5">
+                                <p className="text-sm leading-relaxed whitespace-pre-line text-foreground/90">
+                                    {concept.longDescription || concept.description}
                                 </p>
-                            </motion.div>
+                            </CardContent>
                         </Card>
-                    </div>
+                    </motion.section>
+
+                    {/* Syntax Section */}
+                    {concept.syntax && (
+                        <motion.section
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                        >
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                    <Code2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <h2 className="text-xl font-semibold">Syntax</h2>
+                            </div>
+                            <Card>
+                                <CardContent className="p-4">
+                                    <div className="bg-muted/50 rounded-lg p-3 border">
+                                        <code className="font-mono text-xs md:text-sm text-foreground">
+                                            {concept.syntax}
+                                        </code>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.section>
+                    )}
+
+                    {/* Example Section */}
+                    <motion.section
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                                <Code2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+                            </div>
+                            <h2 className="text-xl font-semibold">Example</h2>
+                        </div>
+                        <Card>
+                            <CardContent className="p-0">
+                                {/* Terminal Header */}
+                                <div className="bg-muted/30 border-b px-3 py-2 flex items-center gap-2">
+                                    <div className="flex gap-1">
+                                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+                                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                                    </div>
+                                    <span className="text-xs text-muted-foreground ml-1 font-medium">
+                                        example.ts
+                                    </span>
+                                </div>
+                                {/* Code Block */}
+                                <pre className="p-4 overflow-x-auto bg-muted/10">
+                                    <code className="font-mono text-sm leading-relaxed">
+                                        {concept.exampleCode || `// Example code for ${concept.title}
+const example = "Hello World";
+console.log(example);`}
+                                    </code>
+                                </pre>
+                            </CardContent>
+                        </Card>
+                    </motion.section>
+
+                    {/* Key Takeaway */}
+                    <motion.section
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                        <Card className="bg-gradient-to-br from-primary/5 via-primary/5 to-transparent border-primary/20">
+                            <CardContent className="p-4">
+                                <div className="flex gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                        <Lightbulb className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-base mb-1.5">Key Takeaway</h3>
+                                        <p className="text-sm text-muted-foreground">
+                                            Understanding <strong className="text-foreground">{concept.title}</strong> is
+                                            fundamental to mastering TypeScript. Practice with the examples above and
+                                            experiment with variations to solidify your knowledge.
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.section>
+
+                    {/* Interactive Visualization CTA */}
+                    <motion.section
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        className="text-center py-12"
+                    >
+                        <div className="inline-block p-6 rounded-xl bg-muted/30 border border-dashed border-primary/30">
+                            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <Play className="h-6 w-6 text-primary" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Interactive Visualization</h3>
+                            <p className="text-sm text-muted-foreground mb-4 max-w-md">
+                                See how <strong>{concept.title}</strong> works in memory with our
+                                interactive visualization tool.
+                            </p>
+                            <Button size="sm" disabled className="rounded-full">
+                                <Play className="mr-2 h-3.5 w-3.5" />
+                                Coming Soon
+                            </Button>
+                        </div>
+                    </motion.section>
+
                 </div>
             </div>
         </div>
