@@ -4,6 +4,8 @@ import { Home } from "@/pages/Home";
 import { Concepts } from "@/pages/Concepts";
 import { Topic } from "@/pages/Topic";
 import { Playground } from "@/pages/Playground";
+import { Problems } from "@/pages/Problems";
+import { ProblemDetail } from "@/pages/ProblemDetail";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route path="concepts" element={<Concepts />} />
           <Route path="concepts/:topicId" element={<Topic />} />
           <Route path="playground" element={<Playground />} />
+          <Route path="problems" element={<Problems />} />
+          <Route path="problems/:problemId" element={<ProblemDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,14 +1,17 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { concepts } from "@/data/concepts";
+import { conceptContent } from "@/content/concept-content";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Play, BookOpen, Code2, Lightbulb } from "lucide-react";
+import { ConceptVisualization } from "@/components/ConceptVisualization";
+import { ArrowLeft, BookOpen, Code2, Lightbulb } from "lucide-react";
 
 export function Topic() {
     const { topicId } = useParams();
     const concept = concepts.find((c) => c.id === topicId);
+    const content = topicId ? conceptContent[topicId] : undefined;
 
     if (!concept) {
         return (
@@ -31,6 +34,12 @@ export function Topic() {
                             <Button variant="ghost" size="sm" className="gap-2 h-8">
                                 <ArrowLeft className="h-3.5 w-3.5" />
                                 Back
+                            </Button>
+                        </Link>
+                        <Link to={`/problems?concept=${encodeURIComponent(concept.title)}`}>
+                            <Button variant="outline" size="sm" className="gap-2 h-8">
+                                <BookOpen className="h-3.5 w-3.5" />
+                                Problems
                             </Button>
                         </Link>
                         <Badge variant="outline" className="text-xs">
@@ -67,14 +76,14 @@ export function Topic() {
                         <Card className="border-l-4 border-l-primary">
                             <CardContent className="p-5">
                                 <p className="text-sm leading-relaxed whitespace-pre-line text-foreground/90">
-                                    {concept.longDescription || concept.description}
+                                    {content?.longDescription || concept.description}
                                 </p>
                             </CardContent>
                         </Card>
                     </motion.section>
 
                     {/* Syntax Section */}
-                    {concept.syntax && (
+                    {content?.syntax && (
                         <motion.section
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -90,7 +99,7 @@ export function Topic() {
                                 <CardContent className="p-4">
                                     <div className="bg-muted/50 rounded-lg p-3 border">
                                         <code className="font-mono text-xs md:text-sm text-foreground">
-                                            {concept.syntax}
+                                            {content.syntax}
                                         </code>
                                     </div>
                                 </CardContent>
@@ -126,7 +135,7 @@ export function Topic() {
                                 {/* Code Block */}
                                 <pre className="p-4 overflow-x-auto bg-muted/10">
                                     <code className="font-mono text-sm leading-relaxed">
-                                        {concept.exampleCode || `// Example code for ${concept.title}
+                                        {content?.exampleCode || `// Example code for ${concept.title}
 const example = "Hello World";
 console.log(example);`}
                                     </code>
@@ -160,27 +169,13 @@ console.log(example);`}
                         </Card>
                     </motion.section>
 
-                    {/* Interactive Visualization CTA */}
+                    {/* Visualization */}
                     <motion.section
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.4 }}
-                        className="text-center py-12"
                     >
-                        <div className="inline-block p-6 rounded-xl bg-muted/30 border border-dashed border-primary/30">
-                            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                                <Play className="h-6 w-6 text-primary" />
-                            </div>
-                            <h3 className="text-lg font-semibold mb-2">Interactive Visualization</h3>
-                            <p className="text-sm text-muted-foreground mb-4 max-w-md">
-                                See how <strong>{concept.title}</strong> works in memory with our
-                                interactive visualization tool.
-                            </p>
-                            <Button size="sm" disabled className="rounded-full">
-                                <Play className="mr-2 h-3.5 w-3.5" />
-                                Coming Soon
-                            </Button>
-                        </div>
+                        <ConceptVisualization conceptId={concept.id} conceptTitle={concept.title} />
                     </motion.section>
 
                 </div>

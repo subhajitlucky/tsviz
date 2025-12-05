@@ -6,9 +6,6 @@ export interface Concept {
     description: string;
     phase: Phase;
     icon?: string;
-    longDescription?: string;
-    syntax?: string;
-    exampleCode?: string;
 }
 
 export const concepts: Concept[] = [
@@ -17,61 +14,6 @@ export const concepts: Concept[] = [
         title: "Primitives & Basic Types",
         description: "Understand the building blocks: string, number, boolean, and the 'any' trap.",
         phase: "Basics",
-        longDescription: `Primitives are the simplest, most fundamental data types in TypeScript. They are immutable (cannot be changed) and passed by value in memory.
-
-**The 7 Primitive Types:**
-
-• **string** - Textual data ("hello", 'world', \`template\`)
-• **number** - All numeric values (integers, floats, Infinity, NaN)
-• **boolean** - true or false
-• **null** - Intentional absence of value
-• **undefined** - Variable declared but not assigned
-• **symbol** - Unique identifier (advanced)
-• **bigint** - Large integers beyond Number.MAX_SAFE_INTEGER
-
-**Key Characteristics:**
-✓ Stored directly in the stack (fast access)
-✓ Immutable - operations create new values
-✓ Compared by value, not reference
-✓ Cannot have properties (unlike objects)`,
-        syntax: "let variableName: type = value;",
-        exampleCode: `// ===== STRING =====
-let username: string = "Alice";
-let message: string = 'Hello';
-let templateStr: string = \`User: \${username}\`;
-
-// ===== NUMBER =====
-let age: number = 25;
-let price: number = 99.99;
-let hex: number = 0xFF;        // 255
-let binary: number = 0b1010;   // 10
-let infinity: number = Infinity;
-
-// ===== BOOLEAN =====
-let isActive: boolean = true;
-let hasPermission: boolean = false;
-
-// ===== NULL & UNDEFINED =====
-let data: null = null;           // Intentionally empty
-let value: undefined = undefined; // Not yet assigned
-
-// ===== TYPE INFERENCE (TypeScript guesses!) =====
-let auto = "I'm a string!";  // TypeScript knows it's string
-let count = 42;               // TypeScript knows it's number
-
-// ===== THE 'ANY' TRAP (AVOID!) =====
-let dangerous: any = "text";
-dangerous = 42;              // No error, but defeats TypeScript!
-dangerous.nonExistent();     // Compiles, but crashes at runtime!
-
-// ===== COMMON MISTAKES =====
-// ❌ Don't do this:
-let bad: string = null;      // Error in strict mode
-let wrong: number = "42";    // Error: string ≠ number
-
-// ✅ Do this instead:
-let safe: string | null = null;  // Union type
-let correct: number = parseInt("42");`,
     },
     {
         id: "functions",
@@ -94,13 +36,19 @@ let correct: number = parseInt("42");`,
     {
         id: "literal-types",
         title: "Literal Types & Enums",
-        description: "Working with specific values and constants.",
+        description: "Lock values to specific strings/numbers and compare with enums.",
         phase: "Basics",
     },
     {
         id: "tuples",
         title: "Tuples",
-        description: "Fixed-length arrays.",
+        description: "Fixed-length arrays with positional meaning.",
+        phase: "Basics",
+    },
+    {
+        id: "safety-types",
+        title: "Safety Types: unknown, never, void, object",
+        description: "Safer alternatives to any and how to model impossible or empty values.",
         phase: "Basics",
     },
     {
@@ -116,6 +64,18 @@ let correct: number = parseInt("42");`,
         phase: "Intermediate",
     },
     {
+        id: "type-assertions",
+        title: "Assertions, Non-Null, satisfies",
+        description: "Direct the type checker safely when it cannot infer enough.",
+        phase: "Intermediate",
+    },
+    {
+        id: "type-queries",
+        title: "typeof, keyof, Indexed Access",
+        description: "Mirror runtime values in the type system for safer reuse.",
+        phase: "Intermediate",
+    },
+    {
         id: "classes",
         title: "Classes & OOP",
         description: "Access modifiers, interfaces with classes, abstract classes.",
@@ -124,13 +84,19 @@ let correct: number = parseInt("42");`,
     {
         id: "modules",
         title: "Modules & Namespaces",
-        description: "Imports, exports, and namespaces.",
+        description: "Imports, exports, namespaces, and interop patterns.",
         phase: "Intermediate",
     },
     {
         id: "async-await",
         title: "Async/Await",
         description: "Typing Promises and async functions.",
+        phase: "Intermediate",
+    },
+    {
+        id: "tsconfig-strict",
+        title: "tsconfig & Strict Mode",
+        description: "Key compiler flags that keep your codebase safe.",
         phase: "Intermediate",
     },
     {
@@ -161,6 +127,12 @@ let correct: number = parseInt("42");`,
         id: "template-literals",
         title: "Template Literal Types",
         description: "String manipulation at the type level.",
+        phase: "Advanced",
+    },
+    {
+        id: "ambient-declarations",
+        title: "Ambient & Declaration Merging",
+        description: "Augment third-party types and describe globals safely.",
         phase: "Advanced",
     },
 ];

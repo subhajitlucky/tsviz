@@ -13,6 +13,7 @@ import {
   checkTypeScriptSyntax,
   formatError,
   type CompilationResult,
+  type ExampleKey,
 } from "@/lib/playground-utils";
 import { Play, RotateCcw, ChevronDown, AlertCircle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,8 +22,9 @@ export function Playground() {
   const [code, setCode] = useState(exampleSnippets.basic.code);
   const [compilationResult, setCompilationResult] = useState<CompilationResult | null>(null);
   const [isCompiling, setIsCompiling] = useState(false);
-  const [selectedExample, setSelectedExample] = useState<string>("basic");
+  const [selectedExample, setSelectedExample] = useState<ExampleKey>("basic");
   const editorRef = useRef<any>(null);
+  const exampleEntries = Object.entries(exampleSnippets) as [ExampleKey, (typeof exampleSnippets)[ExampleKey]][];
 
   // Handle editor mount
   const handleEditorDidMount = (editor: any) => {
@@ -32,8 +34,8 @@ export function Playground() {
   // Compile and check code
   const handleRun = () => {
     setIsCompiling(true);
-    setTimeout(() => {
-      const result = checkTypeScriptSyntax(code);
+    setTimeout(async () => {
+      const result = await checkTypeScriptSyntax(code);
       setCompilationResult(result);
       setIsCompiling(false);
     }, 300);
@@ -41,7 +43,7 @@ export function Playground() {
 
   // Reset to example
   const handleReset = () => {
-    const example = exampleSnippets[selectedExample as keyof typeof exampleSnippets];
+    const example = exampleSnippets[selectedExample];
     if (example) {
       setCode(example.code);
       setCompilationResult(null);
@@ -49,8 +51,8 @@ export function Playground() {
   };
 
   // Load example snippet
-  const loadExample = (key: string) => {
-    const example = exampleSnippets[key as keyof typeof exampleSnippets];
+  const loadExample = (key: ExampleKey) => {
+    const example = exampleSnippets[key];
     if (example) {
       setCode(example.code);
       setSelectedExample(key);
@@ -60,9 +62,9 @@ export function Playground() {
 
   // Auto-compile on code change (debounced)
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       if (code.trim()) {
-        const result = checkTypeScriptSyntax(code);
+        const result = await checkTypeScriptSyntax(code);
         setCompilationResult(result);
       }
     }, 1000);
@@ -88,7 +90,7 @@ export function Playground() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              {Object.entries(exampleSnippets).map(([key, example]) => (
+              {exampleEntries.map(([key, example]) => (
                 <DropdownMenuItem
                   key={key}
                   onClick={() => loadExample(key)}

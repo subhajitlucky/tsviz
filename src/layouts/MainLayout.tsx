@@ -24,6 +24,12 @@ export function MainLayout() {
                                     Concepts
                                 </Link>
                                 <Link
+                                    to="/problems"
+                                    className="transition-colors hover:text-foreground/80 text-foreground/60"
+                                >
+                                    Problems
+                                </Link>
+                                <Link
                                     to="/playground"
                                     className="transition-colors hover:text-foreground/80 text-foreground/60"
                                 >
